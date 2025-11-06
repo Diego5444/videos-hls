@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- SEO Básico -->
+  <title>DORAMAS TV | Ver Dramas Coreanos, Doramas Online y Películas Asiáticas Gratis</title>
+  <meta name="description" content="DORAMAS TV - Mira dramas coreanos, doramas chinos, japoneses y taiwaneses online gratis en español latino y subtitulado. Disfruta de tus k-dramas favoritos, películas asiáticas y mucho más sin costo.">
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://abby-cdb30.web.app/" />
+
+  <!-- Palabras clave mejoradas -->
+  <meta name="keywords" content="doramas, doramas tv, ver doramas online, dramas coreanos gratis, kdramas subtitulados, dramas asiáticos, películas coreanas, doramas en español latino, ver dramas chinos, ver doramas japoneses, dramas taiwaneses, novelas coreanas, good boy drama, dog tv, ver dramas gratis, series coreanas online, dramas románticos, doramas históricos, kdramas 2025, mejores doramas, doramas completos">
+
+  <!-- Google AdSense -->
+
+  <!-- Open Graph (Facebook, WhatsApp, LinkedIn) -->
+  <meta property="og:title" content="DORAMAS TV | Ver Dramas Coreanos y Doramas Online Gratis" />
+  <meta property="og:description" content="Disfruta de dramas coreanos, chinos, japoneses y películas asiáticas en español y subtitulado. Todo gratis en DORAMAS TV." />
+  <meta property="og:url" content="https://abby-cdb30.web.app/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://abby-cdb30.web.app/img/logo.png" />
+  <meta property="og:site_name" content="DORAMAS TV" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="DORAMAS TV | Ver Dramas Coreanos y Doramas Online Gratis" />
+  <meta name="twitter:description" content="Mira doramas coreanos, kdramas, películas asiáticas y más en español latino y subtitulado. Gratis y online en DORAMAS TV." />
+  <meta name="twitter:image" content="https://abby-cdb30.web.app/img/logo.png" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="img/logo.png" />
+
+  <!-- Estilos -->
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+  <body>
+    <!-- Encabezado y menú -->
+    <header>
+      <!-- Botón del menú con imagen -->
+      <div id="menu-toggle" class="menu-toggle" onclick="toggleMenu()">
+        <img src="img/menu.png" alt="Menú" style="width: 30px; height: 30px" />
+      </div>
+
+      <h1>DORAMAS TV</h1>
+      
+      <div id="search-toggle" class="search-toggle">
+        <img src="img/lupa.png" alt="Buscar" style="width: 24px; height: 24px;">
+      </div>
+    </header>
+
+    <!-- Saludo dinámico -->
+    <div id="saludo-bienvenida" class="hidden"></div>
+
+    <nav id="menu" class="hidden">
+      <ul>
+        <li>
+          <a href="POLITICAS/politica_es.html" target="_blank" id="link-politica">POLITICAS Y PRIVASIDAD</a>
+        </li>
+        <li><button id="btn-acerca">INFORMACION DE USO</button></li>
+        <li><button id="btn-favoritos">MIS FAVORITOS</button></li>
+        <li><button id="btn-pedir-drama">PEDIR UN DRAMA</button></li>
+        <li><button id="btn-populares">POPULARES ⭐</button></li>
+      </ul>
+    </nav>
+
+    <!-- Botón flotante de usuarios en línea -->
+    <div id="btn-usuarios-online" class="btn-flotante">
+      👥 <span id="num-usuarios">0</span> en línea
+    </div>
+
+    <!-- Modal de mantenimiento -->
+    <div id="modal-mantenimiento" class="hidden">
+      <div class="mantenimiento-content">
+        <h2>🚧 Mantenimiento en curso</h2>
+        <p>Estamos trabajando para mejorar la plataforma. Intenta más tarde.</p>
+      </div>
+    </div>
+
+    <!-- Carrusel de emisión destacado -->
+    <section id="destacado-emision">
+      <div id="carrusel-destacado" class="carrusel-destacado">
+        <img id="carrusel-img" src="" alt="Destacado" />
+
+        <!-- Flechas -->
+        <button class="flecha izquierda" id="carrusel-prev">‹</button>
+        <button class="flecha derecha" id="carrusel-next">›</button>
+
+        <!-- Info sobrepuesta -->
+        <div class="info-destacado">
+          <div class="info-flex">
+            <div class="info-texto">
+              <div class="info-img-derecha">
+                <img id="carrusel-img-derecha" src="" alt="Miniatura" />
+              </div>
+              <h2 id="carrusel-titulo">Título</h2>
+              <div class="tags">
+                <span id="carrusel-ano" class="tag">2025</span>
+                <span id="carrusel-audio" class="tag">Latino</span>
+              </div>
+              <p id="carrusel-descripcion">Descripción</p>
+
+              <!-- Botones -->
+              <div class="botones">
+                <button id="btn-ver" class="btn-play">▶ REPRODUCIR</button>
+                <button id="btn-lista-carrusel" class="btn-lista">
+                  <span class="corazon-icon">♡</span>
+                  <span class="texto-favorito">FAVORITOS</span>
+                </button>
+              </div>
+
+              <!-- Indicadores -->
+              <div class="indicadores" id="carrusel-indicadores"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sección de búsqueda -->
+    <section id="busqueda" class="hidden">
+      <input type="text" id="buscador" placeholder="Buscar películas o series..." />
+      <h2>Resultados de búsqueda</h2>
+      <div id="busqueda-resultados"></div>
+    </section>
+
+    <!-- Sección Acerca de -->
+    <section id="acerca-de" class="hidden">
+      <button id="btn-volver-acerca">Volver</button>
+      <div class="acerca-contenido">
+        <h1>Acerca de DORAMAS TV</h1>
+
+        <div class="descripcion-general">
+          <p>
+            DORAMAS TV es tu plataforma de streaming favorita donde puedes disfrutar
+            de una amplia variedad de contenido audiovisual. Nuestra plataforma
+            está diseñada para ofrecerte la mejor experiencia de entretenimiento
+            con dramas asiáticos, películas y series de alta calidad.
+          </p>
+        </div>
+
+        <div class="contenido-info">
+          <h2>¿Qué contenido encontrarás?</h2>
+          <p>En DORAMAS TV tenemos una extensa biblioteca que incluye:</p>
+          <ul>
+            <li>
+              <strong>Dramas:</strong> Series asiáticas de diferentes géneros
+              (romance, acción, comedia, thriller)
+            </li>
+            <li>
+              <strong>Películas:</strong> Una selección curada de películas de
+              diversos países y géneros
+            </li>
+            <li>
+              <strong>Contenido en emisión:</strong> Los últimos estrenos y
+              series más populares del momento
+            </li>
+          </ul>
+        </div>
+
+        <div class="como-funciona">
+          <h2>¿Cómo funciona DORAMAS TV?</h2>
+          <p>
+            Nuestra plataforma es intuitiva y fácil de usar. Simplemente navega
+            por las diferentes categorías, selecciona el contenido que te
+            interese y disfruta. Todo nuestro contenido está disponible con
+            audio latino y subtítulos para tu comodidad.
+          </p>
+        </div>
+
+        <div class="guia-uso">
+          <h2>Guía Básica de Uso</h2>
+          <div class="acordeon">
+            <div class="acordeon-item">
+              <button class="acordeon-header">
+                ¿Cómo navegar por la plataforma?
+              </button>
+              <div class="acordeon-content">
+                <p>
+                  Utiliza el menú hamburguesa (☰) en la esquina superior
+                  izquierda para acceder a las opciones principales. En la
+                  pantalla principal encontrarás el carrusel de contenido
+                  destacado y las secciones de Dramas y Películas. Puedes
+                  desplazarte horizontalmente en cada sección para ver más
+                  contenido.
+                </p>
+              </div>
+            </div>
+
+            <div class="acordeon-item">
+              <button class="acordeon-header">
+                ¿Cómo buscar contenido específico?
+              </button>
+              <div class="acordeon-content">
+                <p>
+                  Haz clic en el ícono de búsqueda (🔍) en la esquina superior
+                  derecha. Escribe el nombre de la serie, película o género que
+                  buscas. Los resultados aparecerán automáticamente mientras
+                  escribes.
+                </p>
+              </div>
+            </div>
+
+            <div class="acordeon-item">
+              <button class="acordeon-header">
+                ¿Cómo ver información detallada de una serie o película?
+              </button>
+              <div class="acordeon-content">
+                <p>
+                  Haz clic en cualquier imagen de contenido para acceder a la
+                  página de detalles. Ahí encontrarás la sinopsis completa, año
+                  de lanzamiento, género, actores principales y la lista de
+                  capítulos disponibles.
+                </p>
+              </div>
+            </div>
+
+            <div class="acordeon-item">
+              <button class="acordeon-header">
+                ¿Cómo reproducir un capítulo o película?
+              </button>
+              <div class="acordeon-content">
+                <p>
+                  Una vez en la página de detalles, verás botones para cada
+                  capítulo disponible. Haz clic en el capítulo que deseas ver y
+                  el reproductor se abrirá automáticamente. Para las películas,
+                  simplemente haz clic en "REPRODUCIR".
+                </p>
+              </div>
+            </div>
+
+            <div class="acordeon-item">
+              <button class="acordeon-header">
+                ¿Qué significa el carrusel destacado?
+              </button>
+              <div class="acordeon-content">
+                <p>
+                  El carrusel en la parte superior muestra automáticamente el
+                  contenido más reciente y popular que está "en emisión". Cambia
+                  cada pocos segundos para mostrarte diferentes opciones. Puedes
+                  hacer clic en "REPRODUCIR" para ir directamente al contenido.
+                </p>
+              </div>
+            </div>
+
+            <div class="acordeon-item">
+              <button class="acordeon-header">
+                ¿Cómo obtener una vista previa del contenido?
+              </button>
+              <div class="acordeon-content">
+                <p>
+                  Mantén presionado cualquier imagen de contenido durante unos
+                  segundos para ver una vista previa rápida con información
+                  básica. Esto te permite conocer más sobre el contenido sin
+                  salir de la página principal.
+                </p>
+              </div>
+            </div>
+
+            <div class="acordeon-item">
+              <button class="acordeon-header">
+                ¿Cómo volver a la página principal?
+              </button>
+              <div class="acordeon-content">
+                <p>
+                  En cualquier momento puedes hacer clic en el botón "Volver"
+                  que aparece en las páginas de detalle o reproductor. También
+                  puedes hacer clic en el logo "DORAMAS TV" en la parte superior
+                  para regresar al inicio.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer-acerca">
+          <p>
+            <strong
+              >¡Disfruta de todo nuestro contenido y gracias por elegir DORAMAS
+              TV!</strong
+            >
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sección de Favoritos -->
+    <section id="favoritos" class="hidden">
+      <button id="btn-volver-favoritos">Volver</button>
+      <div class="favoritos-contenido">
+        <h1>Mis Favoritos</h1>
+        <div id="favoritos-lista" class="favoritos-grid">
+          <div class="favoritos-vacio">
+            <h3>No tienes favoritos aún</h3>
+            <p>Agrega contenido a tu lista de favoritos para verlo aquí</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Listas de contenido -->
+    <main id="listas-contenido">
+      <!-- Banner skyscraper 160×300 fijo (desktop) -->
+      <div id="banner-lateral" style="
+        position: fixed;
+        top: 50%;
+        right: 8px;
+        transform: translateY(-50%);
+        z-index: 999;
+        display: none;          /* se oculta en móvil */
+      ">
+        <script type="text/javascript">
+          atOptions = {
+            'key' : '2632fc39d5740e7b7b502629eebc60a7',
+            'format' : 'iframe',
+            'height' : 300,
+            'width'  : 160,
+            'params' : {}
+          };
+        </script>
+        <script type="text/javascript" src="//portentjonasfewer.com/2632fc39d5740e7b7b502629eebc60a7/invoke.js"></script>
+      </div>
+
+      <!-- Mostrar solo en escritorio -->
+      <script>
+        if (window.innerWidth >= 768) {
+          document.getElementById('banner-lateral').style.display = 'block';
+        }
+      </script>
+      
+      <section>
+        <h2>Series y Dramas Coreanos</h2>
+        <div class="contenedor-scroll">
+          <div id="dramas"></div>
+          <div class="scroll-control">
+            <div class="scroll-track">
+              <div class="scroll-thumb" data-target="dramas"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <section>
+        <h2>Películas Coreanas</h2>
+        <div class="contenedor-scroll">
+          <div id="peliculas"></div>
+          <div class="scroll-control">
+            <div class="scroll-track">
+              <div class="scroll-thumb" data-target="peliculas"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Vista de detalle -->
+    <section id="detalle" class="hidden">
+      <button id="btn-volver">Volver</button>
+      <div class="detalle-header">
+        <img id="detalle-img" alt="Imagen" />
+        <div class="detalle-actions">
+          <button id="btn-favorito-detalle" class="btn-favorito-detalle">
+            <span class="corazon-icon">♡</span>
+          </button>
+          <!-- Nuevo botón de Like -->
+          <button id="btn-like-detalle" class="btn-like-detalle">
+            <span class="like-icon">👍</span>
+            <span class="like-count">0</span>
+          </button>
+        </div>
+      </div>
+      <h2 id="detalle-titulo"></h2>
+      <div style="max-height: 100px; overflow-y: auto; background: #1a1a1a; padding: 10px; border-radius: 5px;">
+        <p id="detalle-descripcion"></p>
+      </div>
+      <p><strong>Año:</strong> <span id="detalle-ano"></span></p>
+      <p><strong>Género:</strong> <span id="detalle-genero"></span></p>
+      <p><strong>Audio:</strong> <span id="detalle-audio"></span></p>
+      <p><strong>Actores:</strong> <span id="detalle-actors"></span></p>
+      
+          <!-- Reproductor de video -->
+          <div>
+    <section id="video-player" class="hidden">
+      <video id="video" controls controlsList="nodownload" oncontextmenu="return false" preload="metadata" width="100%"></video>
+      <button id="btn-fullscreen">Pantalla completa</button>
+    </section>
+    </div>
+      <div id="capitulos-lista"></div>
+      <button id="btn-chat" class="detalle-button">Chat</button>
+      <button id="btn-compartir" class="detalle-button">Compartir</button>
+    </section>
+
+    <!-- Botón condicional para juego -->
+    <button id="btn-game" class="hidden">🎮 Jugar</button>
+
+    <!-- Modal emergente de vista previa -->
+    <div id="preview-modal" class="hidden">
+      <div class="modal-content">
+        <button id="modal-cerrar" class="cerrar-modal">✕</button>
+        <img id="preview-img" src="" alt="Preview" />
+        <div class="modal-text">
+          <h3 id="preview-title"></h3>
+          <p id="preview-descripcion"></p>
+        </div>
+      </div>
+    </div>
+
+    <section id="populares" class="hidden">
+      <button id="btn-volver-populares">Volver</button>
+      <div class="populares-contenido">
+        <h1>🔥 Los Más Populares</h1>
+        <div id="lista-populares" class="favoritos-grid"></div>
+      </div>
+    </section>
+
+    <!-- Modal de Chat -->
+    <div id="chat-modal" class="hidden">
+      <div class="chat-container">
+        <button class="cerrar-chat" id="cerrar-chat">✕</button>
+
+        <!-- Login si no está autenticado -->
+        <div id="chat-login" class="chat-login">
+          <h3>Iniciar sesión</h3>
+          <input type="text" id="chat-usuario" placeholder="Nombre de usuario" />
+          <input type="password" id="chat-clave" placeholder="Contraseña" />
+          <button id="chat-login-btn">Entrar</button>
+          <p id="chat-login-error" style="color: crimson; font-size: 14px; display: none">Error de autenticación</p>
+        </div>
+
+        <!-- Chat en tiempo real -->
+        <div id="chat-area" class="hidden">
+          <div id="chat-mensajes" class="chat-mensajes"></div>
+          <form id="chat-form">
+            <input type="text" id="chat-texto" placeholder="Escribe un mensaje..." required />
+            <button type="submit">Enviar</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal de Advertencia por Lenguaje Ofensivo -->
+    <div id="modal-advertencia" class="hidden">
+      <div>
+        <h3>⚠️ Advertencia</h3>
+        <p>Se ha detectado el uso de lenguaje ofensivo.</p>
+        <p>Por favor evita este tipo de palabras para mantener un ambiente sano en la comunidad.</p>
+        <p id="estado-corazones">❤️❤️❤️</p>
+        <button id="cerrar-modal-advertencia">Entendido</button>
+      </div>
+    </div>
+
+    <!-- Modal de Usuario Bloqueado -->
+    <div id="modal-bloqueo" class="hidden">
+      <div>
+        <h3>🚫 Acceso Bloqueado</h3>
+        <p>Tu cuenta ha sido bloqueada por uso repetido de lenguaje ofensivo.</p>
+        <p style="font-size: 18px; margin: 10px 0">Motivo de suspensión:</p>
+        <div id="historial-bloqueo"></div>
+        <button id="cerrar-modal-bloqueo">Cerrar</button>
+      </div>
+    </div>
+
+    <!-- Modal de Reporte de Mensaje -->
+    <div id="modal-reporte" class="hidden">
+      <div>
+        <h3>🚩 Reportar mensaje</h3>
+        <p id="mensaje-reportado"></p>
+
+        <label><input type="radio" name="motivo-reporte" value="Lenguaje ofensivo" /> Lenguaje ofensivo</label><br />
+        <label><input type="radio" name="motivo-reporte" value="Spam" /> Spam</label><br />
+        <label><input type="radio" name="motivo-reporte" value="Fuera de tema" /> Fuera de tema</label><br />
+        <label><input type="radio" name="motivo-reporte" value="Otro" /> Otro</label>
+
+        <textarea id="comentario-reporte" placeholder="Comentario adicional (opcional)"></textarea>
+
+        <div>
+          <button id="cancelar-reporte">Cancelar</button>
+          <button id="enviar-reporte">Enviar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal de Confirmación de Reporte -->
+    <div id="modal-gracias-reporte" class="modal-overlay hidden">
+      <div class="modal-gracias-contenido">
+        <h3>✅ ¡Gracias <span id="usuario-gracias"></span>!</h3>
+        <p>ADMINISTRADOR <strong>DORAMAS TV</strong> agradece tu ayuda para mantener una comunidad sana y respetuosa.</p>
+        <button id="cerrar-modal-gracias">Cerrar</button>
+      </div>
+    </div>
+    
+    <div id="modal-publicidad" class="hidden">
+      <div class="publicidad-content">
+        <button id="cerrar-publicidad" class="hidden">❌</button>
+        <img id="img-publicidad" src="" alt="Publicidad" />
+      </div>
+    </div>
+
+    <section id="seccion-ajustes" class="hidden">
+      <button id="btn-volver-ajustes">← Volver</button>
+      <h2>⚙️ Ajustes de la Página</h2>
+
+      <!-- 1. Cambiar imagen de perfil -->
+      <div>
+        <label>Foto de Perfil:</label><br />
+        <img id="img-perfil" src="img/default.png" alt="Perfil" width="100" style="border-radius: 50%" />
+        <input type="file" id="input-perfil" accept="image/*" />
+      </div><br />
+
+      <!-- 2. Modo oscuro -->
+      <div>
+        <label>
+          <input type="checkbox" id="toggle-darkmode" />
+          Activar Modo Oscuro
+        </label>
+      </div><br />
+
+      <!-- 3. Tamaño de texto -->
+      <div>
+        <label for="text-size">Tamaño de Texto:</label>
+        <select id="text-size">
+          <option value="16">Normal</option>
+          <option value="18">Grande</option>
+          <option value="20">Extra Grande</option>
+        </select>
+      </div><br />
+
+      <!-- 4. Idioma -->
+      <div>
+        <label for="idioma">Idioma:</label>
+        <select id="idioma">
+          <option value="es">Español</option>
+          <option value="en">Inglés</option>
+        </select>
+      </div><br />
+
+      <!-- 5. Sonidos de clic -->
+      <div>
+        <label>
+          <input type="checkbox" id="toggle-sonido" />
+          Sonidos de clic activados
+        </label>
+      </div><br />
+
+      <!-- 6. Animaciones -->
+      <div>
+        <label>
+          <input type="checkbox" id="toggle-animaciones" />
+          Animaciones activadas
+        </label>
+      </div>
+    </section>
+<!-- Modal de Pedir Drama -->
+    <div id="modal-pedir-drama" class="hidden">
+      <div class="chat-container">
+        <button class="cerrar-chat" id="cerrar-pedir-drama">✕</button>
+
+        <!-- Login si no está autenticado -->
+        <div id="pedir-drama-login" class="chat-login">
+          <h3>Inicia sesión para pedir</h3>
+          <input type="text" id="usuario-pedir" placeholder="Usuario" />
+          <input type="password" id="clave-pedir" placeholder="Contraseña" />
+          <button id="btn-login-pedir">Entrar</button>
+          <p id="error-pedir" style="color:red;display:none;">Error al autenticar</p>
+        </div>
+
+        <!-- Formulario para petición -->
+        <div id="formulario-pedir" class="hidden">
+          <div id="lista-peticiones" class="chat-mensajes"></div>
+
+          <form id="form-pedir-drama">
+            <input type="text" id="titulo-pedido" placeholder="Título del drama" required />
+            <input type="file" id="imagen-pedido" accept="image/*" required />
+            <img id="preview-pedido" src="" alt="Vista previa" style="display: none;" />
+            <button type="submit">Enviar Petición</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+<!-- Scripts -->
+    <script>
+      function toggleMenu() {
+        const menu = document.getElementById("menu");
+        if (menu) {
+          menu.classList.toggle("visible");
+        }
+      }
+    </script>
+    
+    
+    <script>
+      // Función para inicializar los controles de scroll personalizados
+      function initScrollControls() {
+        const scrollThumbs = document.querySelectorAll(".scroll-thumb");
+
+        scrollThumbs.forEach((thumb) => {
+          const targetId = thumb.dataset.target;
+          const scrollContainer = document.getElementById(targetId);
+          const scrollTrack = thumb.parentElement;
+
+          if (!scrollContainer) return;
+
+          let isDragging = false;
+          let startX = 0;
+          let scrollLeft = 0;
+
+          // Actualizar posición del thumb basado en el scroll del contenedor
+          function updateThumbPosition() {
+            const maxScroll = scrollContainer.scrollWidth - scrollContainer.clientWidth;
+            if (maxScroll <= 0) return;
+
+            const scrollRatio = scrollContainer.scrollLeft / maxScroll;
+            const maxThumbPosition = scrollTrack.clientWidth - thumb.clientWidth;
+            thumb.style.left = scrollRatio * maxThumbPosition + "px";
+          }
+          
+          // Evento de scroll del contenedor
+          scrollContainer.addEventListener("scroll", updateThumbPosition);
+
+          // Eventos del thumb
+          thumb.addEventListener("mousedown", startDrag);
+          thumb.addEventListener("touchstart", startDrag, { passive: false });
+
+          // Evento del track (clic directo en la pista)
+          scrollTrack.addEventListener("click", (e) => {
+            if (e.target === scrollTrack) {
+              const rect = scrollTrack.getBoundingClientRect();
+              const clickX = e.clientX - rect.left;
+              const scrollRatio = clickX / scrollTrack.clientWidth;
+              const maxScroll = scrollContainer.scrollWidth - scrollContainer.clientWidth;
+              scrollContainer.scrollLeft = scrollRatio * maxScroll;
+            }
+          });
+          
+          function startDrag(e) {
+            isDragging = true;
+            startX = e.type === "mousedown" ? e.clientX : e.touches[0].clientX;
+            scrollLeft = scrollContainer.scrollLeft;
+
+            document.addEventListener("mousemove", onDrag);
+            document.addEventListener("mouseup", stopDrag);
+            document.addEventListener("touchmove", onDrag, { passive: false });
+            document.addEventListener("touchend", stopDrag);
+
+            e.preventDefault();
+          }
+
+          function onDrag(e) {
+            if (!isDragging) return;
+
+            const currentX = e.type === "mousemove" ? e.clientX : e.touches[0].clientX;
+            const deltaX = currentX - startX;
+            const scrollRatio = deltaX / scrollTrack.clientWidth;
+            const maxScroll = scrollContainer.scrollWidth - scrollContainer.clientWidth;
+
+            scrollContainer.scrollLeft = scrollLeft + scrollRatio * maxScroll;
+
+            e.preventDefault();
+          }
+          
+          function stopDrag() {
+            isDragging = false;
+            document.removeEventListener("mousemove", onDrag);
+            document.removeEventListener("mouseup", stopDrag);
+            document.removeEventListener("touchmove", onDrag);
+            document.removeEventListener("touchend", stopDrag);
+          }
+
+          // Inicializar posición después de un breve delay
+          setTimeout(updateThumbPosition, 100);
+        });
+      }
+
+      // Inicializar cuando el DOM esté listo
+      document.addEventListener("DOMContentLoaded", () => {
+        initScrollControls();
+      });
+
+      // Re-inicializar controles después de cargar contenido dinámico
+      function reinitScrollControls() {
+        setTimeout(() => {
+          initScrollControls();
+        }, 100);
+      }
+      </script>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage-compat.js"></script>
+    <script src="js/app.js" type="module"></script>
+    <script>
+  // Función para cerrar el menú
+  function closeMenu() {
+    const menu = document.getElementById("menu");
+    if (menu) {
+      menu.classList.remove("visible");
+      menu.classList.add("hidden");
+    }
+  }
+
+  // Añadir event listeners a los botones del menú
+  document.addEventListener('DOMContentLoaded', function() {
+    // Botones del menú que deben cerrarlo al hacer clic
+    const menuButtons = [
+      'btn-acerca',
+      'btn-favoritos',
+      'btn-pedir-drama',
+      'btn-populares',
+      'btn-ajustes'
+    ];
+    
+    menuButtons.forEach(buttonId => {
+      const button = document.getElementById(buttonId);
+      if (button) {
+        button.addEventListener('click', closeMenu);
+      }
+    });
+  });
+</script>
+  </body>
+</html>

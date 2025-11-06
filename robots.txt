@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://abby-cdb30.web.app/sitemap.xml

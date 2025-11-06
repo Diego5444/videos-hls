@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitor de Ethereum</title>
+    <link rel="icon" href="https://img.icons8.com/fluency/32/000000/ethereum.png" type="image/png">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #000;
+            font-size: 16px;
+            color: #ff7518;
+            background-image: url('https://media.istockphoto.com/id/2166581304/vector/halloween-banner-with-black-bats-pumpkins-and-ghosts-on-the-orange-background-illustration.jpg?s=612x612&w=0&k=20&c=U-3-9z0rqp36nMP1cjj_3WbngukL3RbhE3souu6XBKA=');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        .container {
+            width: 100%;
+            max-width: none;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            box-shadow: none;
+        }
+        h1 {
+            text-align: center;
+            color: #ff7518;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        h1 img {
+            width: 90px;
+            margin: 0;
+        }
+        h2 {
+            text-align: center;
+            color: #ff7518;
+        }
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            background: linear-gradient(to bottom, #1a1a1a, #000000);
+        }
+        th, td {
+            border: 1px solid #333;
+            padding: 12px;
+            text-align: left;
+            color: #ff7518;
+        }
+        th {
+            background: linear-gradient(to bottom, #ff7518, #cc5500);
+            color: black;
+            font-weight: bold;
+        }
+        td {
+            background: #1a1a1a;
+            transition: background 0.3s;
+        }
+        tr:hover td {
+            background: #333333;
+        }
+        .red { color: red !important; font-weight: bold; }
+        .green { color: green !important; font-weight: bold; }
+        #chart-container {
+            position: relative;
+            height: 400px;
+            margin-bottom: 20px;
+            background: #121212;
+            border-radius: 8px;
+        }
+        #alert-section {
+            background: #333333;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 10px;
+            color: #ff7518;
+        }
+        #alert-section input {
+            margin-right: 10px;
+            padding: 5px;
+            width: calc(100% - 120px);
+            background: #1a1a1a;
+            color: #ff7518;
+            border: 1px solid #ff7518;
+        }
+        #alert-section button {
+            padding: 5px 10px;
+            background: #ff7518;
+            color: black;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        #alert-section button:hover {
+            background: #cc5500;
+        }
+        .loading {
+            text-align: center;
+            color: #ff7518;
+        }
+        .error {
+            color: #dc3545;
+            text-align: center;
+            background: #1a1a1a;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .refresh-btn {
+            background: #ff7518;
+            color: black;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-bottom: 10px;
+            display: block;
+            margin: 0 auto;
+            width: 100%;
+            max-width: 200px;
+        }
+        .refresh-btn:hover {
+            background: #cc5500;
+        }
+        #interval-select {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        #interval-select button {
+            margin: 5px;
+            padding: 5px 10px;
+            background: #ff7518;
+            color: black;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        #interval-select button.active {
+            background: #cc5500;
+        }
+        #interval-select button:hover {
+            background: #cc5500;
+        }
+        .api-status {
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 0.9em;
+            color: #ff7518;
+        }
+        .countdown {
+            text-align: center;
+            color: #ff7518;
+            margin-top: 20px;
+            font-size: 0.9em;
+        }
+        #alert-indicator {
+            margin-top: 10px;
+            text-align: center;
+            display: none;
+        }
+
+        @media (max-width: 600px) {
+            body { font-size: 18px; }
+            .container { padding: 10px; }
+            #chart-container { height: 300px; }
+            table th, table td { padding: 6px; }
+            h1 img { width: 70px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Monitor de Ethereum <img src="img/HALLOWEEN.png" alt="Calabaza Halloween"></h1>
+        
+        <button class="refresh-btn" onclick="loadData()">Refrescar Datos</button>
+        <div id="api-status" class="api-status"></div>
+        
+        <div id="crypto-details">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Atributo</th>
+                        <th>Valor</th>
+                    </tr>
+                </thead>
+                <tbody id="details-tbody">
+                    <tr><td colspan="2" class="loading">Cargando datos...</td></tr>
+                </tbody>
+            </table>
+
+            <h2>Gráfica de Precios</h2>
+            <div id="interval-select">
+                <button onclick="changeInterval(1, this)" class="active">1 Día</button>
+                <button onclick="changeInterval(7, this)">1 Semana</button>
+                <button onclick="changeInterval(30, this)">1 Mes</button>
+                <button onclick="changeInterval(365, this)">1 Año</button>
+            </div>
+            <div id="chart-container">
+                <canvas id="price-chart"></canvas>
+            </div>
+
+            <div id="alert-section">
+                <h3>Configurar Alerta de Precio</h3>
+                <p>Recibe una notificación profesional cuando el precio supere el umbral.</p>
+                <input type="number" id="alert-price" placeholder="Ej: 4000" step="0.01">
+                <button onclick="setAlert()">Establecer Alerta</button>
+                <p id="alert-status"></p>
+                <div id="alert-indicator">
+                    <span style="background:#90EE90; color:black; padding:4px 12px; border-radius:20px; font-size:0.8em; font-weight:bold;">
+                        ALERTA ACTIVA
+                    </span>
+                </div>
+            </div>
+
+            <div class="countdown">
+                ¡Faltan <span id="halloween-countdown"></span> para Halloween!
+            </div>
+        </div>
+    </div>
+
+    <!-- Sonido profesional tipo exchange -->
+    <audio id="alert-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-coin-win-notification-1939.mp3" preload="auto"></audio>
+
+    <script>
+        const CRYPTO_ID = 'ETH';
+        const COINGECKO_ID = 'ethereum';
+        let chart = null;
+        let alertThreshold = localStorage.getItem('alertThreshold') ? parseFloat(localStorage.getItem('alertThreshold')) : null;
+        let pollInterval = null;
+        let chartInterval = 1;
+        let dataUpdateInterval = null;
+        let currentAPI = 'coingecko';
+        let alertTriggered = false;
+
+        async function safeFetch(url, fallbackUrl = null) {
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`Error ${response.status}`);
+                return await response.json();
+            } catch (error) {
+                console.error('Error en:', url, error);
+                if (fallbackUrl) {
+                    console.log('Usando fallback:', fallbackUrl);
+                    const response = await fetch(fallbackUrl);
+                    if (!response.ok) throw new Error(`Fallback falló: ${response.status}`);
+                    return await response.json();
+                }
+                throw error;
+            }
+        }
+
+        async function loadData() {
+            await loadDetails();
+            await loadChart(chartInterval);
+            updateAPIStatus();
+        }
+
+        async function loadDetails() {
+            const tbody = document.getElementById('details-tbody');
+            tbody.innerHTML = '<tr><td colspan="2" class="loading">Cargando datos...</td></tr>';
+
+            let data = null;
+            try {
+                data = await safeFetch(`https://api.coingecko.com/api/v3/coins/${COINGECKO_ID}`);
+                currentAPI = 'coingecko';
+            } catch (error) {
+                const fallbackUrl = `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${CRYPTO_ID}&tsyms=USD`;
+                data = await safeFetch(fallbackUrl);
+                currentAPI = 'cryptocompare';
+            }
+
+            let market = currentAPI === 'coingecko' ? data.market_data : data.RAW[CRYPTO_ID].USD;
+            const changePercent = market.price_change_percentage_24h || market.CHANGEPCT24HOUR;
+            const colorClass = changePercent <= 0 ? 'red' : 'green';
+
+            const rows = [
+                { attr: 'Precio Actual (USD)', value: `$${market.current_price?.usd?.toFixed(2) || market.PRICE.toFixed(2)}`, class: colorClass },
+                { attr: 'Cambio 24h (%)', value: `${changePercent.toFixed(2)}%`, class: colorClass },
+                { attr: 'Volumen 24h', value: `$${market.total_volume?.usd?.toLocaleString() || market.VOLUMEDAYTO?.toLocaleString()}` },
+                { attr: 'Capitalización de Mercado', value: `$${market.market_cap?.usd?.toLocaleString() || market.MKTCAP?.toLocaleString()}` },
+                { attr: 'Suministro Circulante', value: market.circulating_supply?.toLocaleString() || 'N/A' }
+            ];
+
+            tbody.innerHTML = '';
+            rows.forEach(row => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td>${row.attr}</td><td${row.class ? ` class="${row.class}"` : ''}>${row.value}</td>`;
+                tbody.appendChild(tr);
+            });
+        }
+
+        async function loadChart(days) {
+            try {
+                let data = null;
+                let interval = days <= 7 ? 'hourly' : 'daily';
+                try {
+                    data = await safeFetch(`https://api.coingecko.com/api/v3/coins/${COINGECKO_ID}/market_chart?vs_currency=usd&days=${days}&interval=${interval}`);
+                    currentAPI = 'coingecko';
+                } catch (error) {
+                    const endpoint = days <= 7 ? 'histohour' : 'histoday';
+                    const limit = days <= 7 ? days * 24 : days;
+                    const fallbackUrl = `https://min-api.cryptocompare.com/data/v2/${endpoint}?fsym=${CRYPTO_ID}&tsym=USD&limit=${limit}`;
+                    data = await safeFetch(fallbackUrl);
+                    data.prices = data.Data.Data.map(d => [d.time * 1000, d.close]);
+                    currentAPI = 'cryptocompare';
+                }
+
+                const ctx = document.getElementById('price-chart').getContext('2d');
+                if (chart) chart.destroy();
+
+                let unit = days <= 1 ? 'hour' : days <= 7 ? 'day' : days <= 30 ? 'day' : 'month';
+
+                chart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: data.prices.map(p => new Date(p[0])),
+                        datasets: [{
+                            label: 'Precio (USD)',
+                            data: data.prices.map(p => p[1]),
+                            borderColor: '#f0b90b',
+                            backgroundColor: (context) => {
+                                const chartArea = context.chart.chartArea;
+                                if (!chartArea) return null;
+                                const gradient = context.chart.ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+                                gradient.addColorStop(0, 'rgba(240, 185, 11, 0.5)');
+                                gradient.addColorStop(1, 'rgba(240, 185, 11, 0)');
+                                return gradient;
+                            },
+                            fill: true,
+                            tension: 0.1,
+                            borderWidth: 2,
+                            pointRadius: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: { type: 'time', time: { unit }, ticks: { color: '#fff', maxTicksLimit: 8 }, grid: { color: 'rgba(255,255,255,0.1)' } },
+                            y: { ticks: { color: '#fff' }, grid: { color: 'rgba(255,255,255,0.1)' } }
+                        },
+                        plugins: { legend: { display: false } }
+                    }
+                });
+            } catch (error) {
+                console.error('Error en gráfico:', error);
+            }
+        }
+
+        function changeInterval(days, button) {
+            chartInterval = days;
+            document.querySelectorAll('#interval-select button').forEach(b => b.classList.remove('active'));
+            button.classList.add('active');
+            loadChart(days);
+        }
+
+        // --- SISTEMA DE NOTIFICACIONES PROFESIONAL ---
+        function setAlert() {
+            const input = document.getElementById('alert-price');
+            const threshold = parseFloat(input.value);
+            if (isNaN(threshold) || threshold <= 0) {
+                document.getElementById('alert-status').textContent = 'Ingresa un precio válido';
+                return;
+            }
+            alertThreshold = threshold;
+            localStorage.setItem('alertThreshold', threshold);
+            document.getElementById('alert-status').innerHTML = `
+                <strong style="color:#90EE90">Alerta activa:</strong> 
+                Notificar cuando ETH ≥ $${threshold.toFixed(2)}
+            `;
+            document.getElementById('alert-indicator').style.display = 'block';
+            input.value = '';
+            alertTriggered = false;
+
+            if ('Notification' in window && Notification.permission === 'default') {
+                Notification.requestPermission();
+            }
+
+            if (!pollInterval) startPolling();
+        }
+
+        function startPolling() {
+            pollInterval = setInterval(async () => {
+                if (!alertThreshold || alertTriggered) return;
+
+                let price = null;
+                try {
+                    const data = await safeFetch(`https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd`);
+                    price = data.ethereum.usd;
+                } catch {
+                    try {
+                        const data = await safeFetch(`https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD`);
+                        price = data.USD;
+                    } catch (e) {
+                        console.error("Error en polling de precio");
+                        return;
+                    }
+                }
+
+                if (price >= alertThreshold) {
+                    alertTriggered = true;
+
+                    const sound = document.getElementById('alert-sound');
+                    sound.currentTime = 0;
+                    sound.play().catch(() => {});
+
+                    if ('vibrate' in navigator) {
+                        navigator.vibrate([200, 100, 200]);
+                    }
+
+                    if (Notification.permission === 'granted') {
+                        const notification = new Notification('ALERTA DE PRECIO ETH', {
+                            body: `Ethereum ha alcanzado $${price.toFixed(2)}\nUmbral: $${alertThreshold.toFixed(2)}`,
+                            icon: 'https://img.icons8.com/fluency/96/000000/ethereum.png',
+                            badge: 'https://img.icons8.com/fluency/48/000000/ethereum.png',
+                            tag: 'eth-price-alert',
+                            renotify: true,
+                            requireInteraction: true,
+                            actions: [
+                                { action: 'view', title: 'Ver Monitor', icon: 'https://img.icons8.com/fluency/32/000000/visible.png' },
+                                { action: 'silence', title: 'Silenciar', icon: 'https://img.icons8.com/fluency/32/000000/mute.png' }
+                            ]
+                        });
+
+                        notification.onclick = (event) => {
+                            if (event.action === 'view') {
+                                window.focus();
+                            }
+                            notification.close();
+                        };
+
+                        notification.onclose = () => {
+                            if (event && event.action === 'silence') {
+                                localStorage.removeItem('alertThreshold');
+                                alertThreshold = null;
+                                document.getElementById('alert-status').innerHTML = '<em style="color:#ff7518">Alerta silenciada.</em>';
+                                document.getElementById('alert-indicator').style.display = 'none';
+                            }
+                        };
+                    }
+
+                    document.getElementById('alert-status').innerHTML = `
+                        <strong style="color:#ff4444">¡DISPARADA!</strong> 
+                        ETH: $${price.toFixed(2)} ≥ $${alertThreshold.toFixed(2)}
+                        <br><small style="color:#ccc">Haz clic en "Silenciar" en la notificación.</small>
+                    `;
+                    document.getElementById('alert-indicator').innerHTML = `
+                        <span style="background:#ff4444; color:white; padding:4px 12px; border-radius:20px; font-size:0.8em; font-weight:bold;">
+                            ¡DISPARADA!
+                        </span>
+                    `;
+                }
+            }, 60000);
+        }
+
+        function updateAPIStatus() {
+            const status = document.getElementById('api-status');
+            status.innerHTML = `API: <strong>${currentAPI.toUpperCase()}</strong> | ${new Date().toLocaleTimeString()}`;
+        }
+
+        function updateCountdown() {
+            const now = new Date();
+            const halloween = new Date(now.getFullYear(), 9, 31);
+            if (now > halloween) halloween.setFullYear(now.getFullYear() + 1);
+            const days = Math.floor((halloween - now) / (1000 * 60 * 60 * 24));
+            document.getElementById('halloween-countdown').textContent = `${days} días`;
+        }
+
+        // Iniciar
+        loadData();
+        dataUpdateInterval = setInterval(loadData, 60000);
+        updateCountdown();
+        setInterval(updateCountdown, 86400000);
+        if (alertThreshold) {
+            document.getElementById('alert-status').innerHTML = `<strong style="color:#90EE90">Alerta activa:</strong> ETH ≥ $${alertThreshold.toFixed(2)}`;
+            document.getElementById('alert-indicator').style.display = 'block';
+            startPolling();
+        }
+    </script>
+</body>
+</html>

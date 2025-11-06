@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="DORAMAS TV - Ver dramas coreanos, películas asiáticas y más gratis. Disfruta de contenido en español, latino y subtitulado.">
+    <meta name="keywords" content="dramas coreanos, ver dramas online, doramas tv, good boy drama, dramas en español, películas asiáticas, dog tv, doramas gratis">
+    <meta name="author" content="DORAMAS TV">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://abby-cdb30.web.app/" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://abby-cdb30.web.app/">
+    <meta property="og:title" content="DORAMAS TV - Dramas Coreanos y Películas Asiáticas">
+    <meta property="og:description" content="Ver dramas coreanos, películas asiáticas y más gratis en DORAMAS TV. Disfruta de contenido en español, latino y subtitulado.">
+    <meta property="og:image" content="https://abby-cdb30.web.app/img/logo.png">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://abby-cdb30.web.app/">
+    <meta property="twitter:title" content="DORAMAS TV - Dramas Coreanos y Películas Asiáticas">
+    <meta property="twitter:description" content="Ver dramas coreanos, películas asiáticas y más gratis en DORAMAS TV. Disfruta de contenido en español, latino y subtitulado.">
+    <meta property="twitter:image" content="https://abby-cdb30.web.app/img/logo.png">
+    
+    <meta name="google-adsense-account" content="ca-pub-1369363099444436">
+    <title>DORAMAS TV - Dramas Coreanos y Películas Asiáticas Gratis</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            overflow: hidden;
+            background: #000;
+            color: white;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        
+        /* Fondo con la imagen del logo */
+        .background-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .background-image {
+            width: 100%;
+            height: 100%;
+            background-image: url('img/logo.png');
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0.15;
+            animation: pulse 4s infinite alternate;
+            filter: drop-shadow(0 0 20px rgba(6, 217, 255, 0.7));
+        }
+        
+        /* Contenido principal */
+        .content-container {
+            text-align: center;
+            z-index: 1;
+            max-width: 800px;
+            padding: 20px;
+        }
+        
+        /* Título principal animado */
+        .main-title {
+            font-size: 5rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #FF0000, #06D9FF, #FF6B6B);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: gradientShift 3s ease infinite, fadeInDown 1.5s ease-out;
+            text-shadow: 0 0 30px rgba(6, 217, 255, 0.5);
+            letter-spacing: 3px;
+        }
+        
+        /* Eslogan animado */
+        .tagline {
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+            color: #ccc;
+            animation: fadeInUp 1.5s ease-out 0.5s both;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+        
+        /* Texto de carga animado */
+        .loading-container {
+            margin-top: 40px;
+            animation: fadeIn 2s ease-out 1s both;
+        }
+        
+        .loading-text {
+            font-size: 1.5rem;
+            color: #FF0000;
+            margin-bottom: 15px;
+            animation: blink 1.5s infinite;
+        }
+        
+        /* Barra de progreso */
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+            margin: 0 auto;
+            max-width: 400px;
+        }
+        
+        .progress {
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, #FF0000, #06D9FF);
+            border-radius: 2px;
+            animation: loadingProgress 5s linear forwards;
+        }
+        
+        /* Partículas animadas */
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+        
+        .particle {
+            position: absolute;
+            background-color: rgba(6, 217, 255, 0.7);
+            border-radius: 50%;
+            animation: float 15s infinite linear;
+        }
+        
+        /* Animaciones */
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.15; }
+            100% { transform: scale(1.1); opacity: 0.25; }
+        }
+        
+        @keyframes loadingProgress {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(100px);
+                opacity: 0;
+            }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 3.5rem;
+            }
+            
+            .tagline {
+                font-size: 1.4rem;
+            }
+            
+            .loading-text {
+                font-size: 1.2rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .main-title {
+                font-size: 2.5rem;
+            }
+            
+            .tagline {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+    
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1369363099444436"
+     crossorigin="anonymous"></script>
+</head>
+<body>
+    <!-- Fondo con imagen del logo -->
+    <div class="background-container">
+        <div class="background-image"></div>
+    </div>
+    
+    <!-- Partículas animadas -->
+    <div class="particles" id="particles"></div>
+    
+    <!-- Contenido principal -->
+    <div class="content-container">
+        <h1 class="main-title">DORAMAS TV</h1>
+        <p class="tagline">El mejor lugar para disfrutar de dramas y películas asiáticas</p>
+        
+        <div class="loading-container">
+            <div class="loading-text">Cargando contenido...</div>
+            <div class="progress-bar">
+                <div class="progress"></div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Crear partículas animadas
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 30;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                // Tamaño aleatorio
+                const size = Math.random() * 5 + 2;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                // Posición inicial aleatoria
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                
+                // Retraso de animación aleatorio
+                particle.style.animationDelay = `${Math.random() * 15}s`;
+                particle.style.animationDuration = `${15 + Math.random() * 10}s`;
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+        
+        // Redirigir después de la carga
+        setTimeout(() => {
+            window.location.href = "index1.html";
+        }, 5000); // 5 segundos
+        
+        // Inicializar partículas cuando se carga la página
+        window.addEventListener('load', createParticles);
+    </script>
+</body>
+</html>
