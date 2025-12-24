@@ -3,304 +3,526 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="DORAMAS TV - Ver dramas coreanos, películas asiáticas y más gratis. Disfruta de contenido en español, latino y subtitulado.">
-    <meta name="keywords" content="dramas coreanos, ver dramas online, doramas tv, good boy drama, dramas en español, películas asiáticas, dog tv, doramas gratis">
-    <meta name="author" content="DORAMAS TV">
-    <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://abby-cdb30.web.app/" />
+    <title>Mapa del Tesoro Cripto</title>
     
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://abby-cdb30.web.app/">
-    <meta property="og:title" content="DORAMAS TV - Dramas Coreanos y Películas Asiáticas">
-    <meta property="og:description" content="Ver dramas coreanos, películas asiáticas y más gratis en DORAMAS TV. Disfruta de contenido en español, latino y subtitulado.">
-    <meta property="og:image" content="https://abby-cdb30.web.app/img/logo.png">
-    
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://abby-cdb30.web.app/">
-    <meta property="twitter:title" content="DORAMAS TV - Dramas Coreanos y Películas Asiáticas">
-    <meta property="twitter:description" content="Ver dramas coreanos, películas asiáticas y más gratis en DORAMAS TV. Disfruta de contenido en español, latino y subtitulado.">
-    <meta property="twitter:image" content="https://abby-cdb30.web.app/img/logo.png">
-    
-    <meta name="google-adsense-account" content="ca-pub-1369363099444436">
-    <title>DORAMAS TV - Dramas Coreanos y Películas Asiáticas Gratis</title>
-    
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=IM+Fell+English+SC&display=swap" rel="stylesheet">
+
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        :root {
+            --paper-color: #decfb3;
+            --paper-dark: #c2b280;
+            --ink-color: #2b1d0e;
+            --wood-color: #5d4037;
+            --gold-color: #daa520;
+            --danger-color: #8b0000;
         }
-        
+
         body {
-            overflow: hidden;
-            background: #000;
-            color: white;
+            margin: 0;
+            font-family: 'IM Fell English SC', serif;
+            background-color: #2e2e2e;
+            color: var(--ink-color);
+            overflow: hidden; /* Controlamos el scroll manualmente */
+        }
+
+        /* --- LOGIN SCREEN --- */
+        #login-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: url('https://www.transparenttextures.com/patterns/aged-paper.png'), radial-gradient(circle, var(--paper-color), var(--wood-color));
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .pirate-btn {
+            background: var(--wood-color);
+            color: var(--paper-color);
+            border: 2px solid var(--gold-color);
+            padding: 15px 30px;
+            font-family: 'Cinzel', serif;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 3px 3px 10px rgba(0,0,0,0.5);
+            transition: transform 0.2s;
+        }
+
+        .pirate-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .pirate-btn:disabled {
+            background: #555;
+            border-color: #333;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* --- UI DASHBOARD --- */
+        #dashboard {
+            display: none; /* Oculto hasta login */
             height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background: var(--wood-color);
+            color: var(--paper-color);
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid var(--gold-color);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+            z-index: 10;
+        }
+
+        .stats {
+            display: flex;
+            gap: 15px;
+            font-size: 0.9rem;
+        }
+
+        .currency-icon { color: var(--gold-color); }
+
+        /* --- MAP AREA --- */
+        #map-container {
+            flex-grow: 1;
+            background: url('https://www.transparenttextures.com/patterns/aged-paper.png'), linear-gradient(to bottom, #d7c49e 0%, #e8dcb5 100%);
+            overflow-y: auto;
+            position: relative;
+            display: flex;
+            flex-direction: column-reverse; /* Nivel 1 abajo, Nivel X arriba */
+            align-items: center;
+            padding: 50px 0;
+        }
+
+        /* Textura de agua o mapa de fondo */
+        .map-bg-decoration {
+            position: absolute;
+            opacity: 0.1;
+            pointer-events: none;
+            width: 100%;
+            height: 100%;
+            background-image: repeating-linear-gradient(45deg, #ccc 0, #ccc 1px, transparent 0, transparent 50%);
+        }
+
+        .level-node {
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle, #8b5a2b, #4a3015);
+            border: 3px dashed var(--ink-color);
+            border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
+            margin: 30px 0;
+            font-size: 1.5rem;
+            color: var(--paper-color);
+            cursor: pointer;
+            position: relative;
+            transition: transform 0.3s;
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.4);
+        }
+
+        .level-node.locked {
+            filter: grayscale(1);
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .level-node:hover:not(.locked) {
+            transform: scale(1.1) rotate(-5deg);
+            border-color: var(--gold-color);
+        }
+
+        /* Línea de camino (decorativo simple) */
+        .path-line {
+            width: 4px;
+            height: 30px;
+            background: var(--ink-color);
+            opacity: 0.5;
+        }
+
+        /* --- MODAL (Old Paper Style) --- */
+        #modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 50;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .parchment-modal {
+            width: 90%;
+            max-width: 500px;
+            background: #f4e4bc;
+            border: 10px solid transparent;
+            border-image: url('https://i.imgur.com/w1pD5c0.png') 30 stretch; /* Borde rústico simulado con CSS simple abajo */
+            border: 5px solid #5d4037;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 50px rgba(0,0,0,0.9) inset;
+            text-align: center;
             position: relative;
         }
-        
-        /* Fondo con la imagen del logo */
-        .background-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            overflow: hidden;
+
+        .parchment-modal h2 {
+            border-bottom: 2px solid var(--ink-color);
+            padding-bottom: 10px;
+            margin-top: 0;
         }
-        
-        .background-image {
-            width: 100%;
-            height: 100%;
-            background-image: url('img/logo.png');
-            background-size: contain;
-            background-position: center;
-            background-repeat: no-repeat;
-            opacity: 0.15;
-            animation: pulse 4s infinite alternate;
-            filter: drop-shadow(0 0 20px rgba(6, 217, 255, 0.7));
+
+        .currency-select {
+            margin: 20px 0;
+            display: flex;
+            justify-content: space-around;
         }
-        
-        /* Contenido principal */
-        .content-container {
-            text-align: center;
-            z-index: 1;
-            max-width: 800px;
-            padding: 20px;
+
+        .currency-option {
+            padding: 10px;
+            border: 1px solid var(--ink-color);
+            cursor: pointer;
+            transition: background 0.2s;
         }
-        
-        /* Título principal animado */
-        .main-title {
-            font-size: 5rem;
+
+        .currency-option.selected {
+            background: var(--gold-color);
+            color: #000;
             font-weight: bold;
-            margin-bottom: 20px;
-            background: linear-gradient(45deg, #FF0000, #06D9FF, #FF6B6B);
-            background-size: 200% 200%;
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            animation: gradientShift 3s ease infinite, fadeInDown 1.5s ease-out;
-            text-shadow: 0 0 30px rgba(6, 217, 255, 0.5);
-            letter-spacing: 3px;
         }
-        
-        /* Eslogan animado */
-        .tagline {
-            font-size: 1.8rem;
-            margin-bottom: 30px;
-            color: #ccc;
-            animation: fadeInUp 1.5s ease-out 0.5s both;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+
+        .status-msg {
+            margin-top: 15px;
+            font-weight: bold;
+            min-height: 1.2em;
         }
-        
-        /* Texto de carga animado */
-        .loading-container {
-            margin-top: 40px;
-            animation: fadeIn 2s ease-out 1s both;
-        }
-        
-        .loading-text {
+
+        .text-danger { color: var(--danger-color); }
+        .text-success { color: green; }
+
+        .close-btn {
+            position: absolute;
+            top: 5px; right: 10px;
             font-size: 1.5rem;
-            color: #FF0000;
-            margin-bottom: 15px;
-            animation: blink 1.5s infinite;
+            cursor: pointer;
+            color: var(--danger-color);
         }
-        
-        /* Barra de progreso */
-        .progress-bar {
-            width: 100%;
-            height: 4px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 2px;
-            overflow: hidden;
-            margin: 0 auto;
-            max-width: 400px;
-        }
-        
-        .progress {
-            height: 100%;
-            width: 0;
-            background: linear-gradient(90deg, #FF0000, #06D9FF);
-            border-radius: 2px;
-            animation: loadingProgress 5s linear forwards;
-        }
-        
-        /* Partículas animadas */
-        .particles {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            z-index: -1;
-        }
-        
-        .particle {
-            position: absolute;
-            background-color: rgba(6, 217, 255, 0.7);
-            border-radius: 50%;
-            animation: float 15s infinite linear;
-        }
-        
-        /* Animaciones */
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.4; }
-        }
-        
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 0.15; }
-            100% { transform: scale(1.1); opacity: 0.25; }
-        }
-        
-        @keyframes loadingProgress {
-            0% { width: 0%; }
-            100% { width: 100%; }
-        }
-        
-        @keyframes float {
-            0% {
-                transform: translateY(0) translateX(0);
-                opacity: 0;
-            }
-            10% {
-                opacity: 1;
-            }
-            90% {
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(-100vh) translateX(100px);
-                opacity: 0;
-            }
-        }
-        
-        /* Responsive */
-        @media (max-width: 768px) {
-            .main-title {
-                font-size: 3.5rem;
-            }
-            
-            .tagline {
-                font-size: 1.4rem;
-            }
-            
-            .loading-text {
-                font-size: 1.2rem;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .main-title {
-                font-size: 2.5rem;
-            }
-            
-            .tagline {
-                font-size: 1.1rem;
-            }
-        }
+
     </style>
-    
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1369363099444436"
-     crossorigin="anonymous"></script>
 </head>
 <body>
-    <!-- Fondo con imagen del logo -->
-    <div class="background-container">
-        <div class="background-image"></div>
+
+    <div id="login-screen">
+        <h1 style="font-size: 3rem; text-shadow: 2px 2px #000; color: var(--gold-color);">Mapa del Tesoro</h1>
+        <p style="font-size: 1.2rem;">Logueate con Google para zarpar</p>
+        <button class="pirate-btn" onclick="loginWithGoogle()">☠️ Ingresar con Google</button>
     </div>
-    
-    <!-- Partículas animadas -->
-    <div class="particles" id="particles"></div>
-    
-    <!-- Contenido principal -->
-    <div class="content-container">
-        <h1 class="main-title">DORAMAS TV</h1>
-        <p class="tagline">El mejor lugar para disfrutar de dramas y películas asiáticas</p>
-        
-        <div class="loading-container">
-            <div class="loading-text">Cargando contenido...</div>
-            <div class="progress-bar">
-                <div class="progress"></div>
+
+    <div id="dashboard" style="display:none;">
+        <header>
+            <div id="user-info">Capitán: <span id="user-name">...</span></div>
+            <div class="stats">
+                <span><span class="currency-icon">₿</span> Sats: <span id="bal-sats">0</span></span>
+                <span><span class="currency-icon">♦</span> ETH: <span id="bal-eth">0</span></span>
+                <span><span class="currency-icon">☀</span> SOL: <span id="bal-sol">0</span></span>
+                <span style="border-left: 1px solid #aaa; padding-left:5px;">Anuncios: <span id="ads-count">0</span>/1000</span>
             </div>
+            <button onclick="logout()" style="background:none; border:none; color:white; cursor:pointer;">(Salir)</button>
+        </header>
+
+        <div id="map-container">
+            </div>
+    </div>
+
+    <div id="modal-overlay">
+        <div class="parchment-modal">
+            <span class="close-btn" onclick="closeModal()">✖</span>
+            <h2 id="modal-title">Nivel X</h2>
+            <p>¡Arrr! Selecciona tu botín y observa el mapa estelar (anuncio) para reclamarlo.</p>
+            
+            <div class="currency-select">
+                <div class="currency-option" onclick="selectCurrency('sats', this)">Satoshis</div>
+                <div class="currency-option" onclick="selectCurrency('eth', this)">Ethereum</div>
+                <div class="currency-option" onclick="selectCurrency('sol', this)">Solana</div>
+            </div>
+
+            <p style="font-size: 0.8rem; font-style: italic;">
+                Debes permanecer <strong>10 segundos</strong> observando el anuncio. <br>
+                Si regresas antes... ¡perderás el rumbo por 20 segundos!
+            </p>
+
+            <button id="btn-watch-ad" class="pirate-btn" onclick="startAdProcess()" disabled>Ver Anuncio</button>
+            
+            <div id="status-message" class="status-msg"></div>
+            <div id="penalty-timer" class="status-msg text-danger"></div>
         </div>
     </div>
-    
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
     <script>
-        // Crear partículas animadas
-        function createParticles() {
-            const particlesContainer = document.getElementById('particles');
-            const particleCount = 30;
+        // --- 1. CONFIGURACIÓN FIREBASE ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyAfqvmcg2Y6GOAQOVjFvXi46hp3NTCT6ZE",
+            authDomain: "abby-cdb30.firebaseapp.com",
+            databaseURL: "https://abby-cdb30-default-rtdb.firebaseio.com",
+            projectId: "abby-cdb30",
+            storageBucket: "abby-cdb30.appspot.com",
+            messagingSenderId: "738241914654",
+            appId: "1:738241914654:web:xxxxx" // Nota: El snippet original no traía appId, suele ser necesario pero a veces con Auth/DB basta. Si falla, búscalo en tu consola.
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.database();
+
+        // --- 2. VARIABLES GLOBALES ---
+        let currentUser = null;
+        let selectedCurrency = null;
+        let currentLevelOpen = 0;
+        let adStartTime = 0;
+        let isAdProcessActive = false;
+        let penaltyActive = false;
+        let userStats = {
+            sats: 0, eth: 0, sol: 0, ads: 0, level: 1
+        };
+
+        // --- 3. AUTENTICACIÓN ---
+        function loginWithGoogle() {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            auth.signInWithPopup(provider)
+                .then((result) => {
+                    console.log("Usuario logueado:", result.user);
+                })
+                .catch((error) => {
+                    console.error("Error login:", error);
+                    alert("Error al iniciar sesión: " + error.message);
+                });
+        }
+
+        function logout() {
+            auth.signOut();
+            location.reload();
+        }
+
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                currentUser = user;
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('dashboard').style.display = 'flex';
+                document.getElementById('user-name').innerText = user.displayName;
+                loadUserData();
+            } else {
+                document.getElementById('login-screen').style.display = 'flex';
+                document.getElementById('dashboard').style.display = 'none';
+            }
+        });
+
+        // --- 4. BASE DE DATOS Y ESTADO ---
+        function loadUserData() {
+            const userRef = db.ref('users/' + currentUser.uid);
+            userRef.on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    userStats = data;
+                } else {
+                    // Inicializar usuario nuevo
+                    userStats = { sats: 0, eth: 0, sol: 0, ads: 0, level: 1 };
+                    userRef.set(userStats);
+                }
+                updateUI();
+                renderMap();
+            });
+        }
+
+        function updateUI() {
+            document.getElementById('bal-sats').innerText = userStats.sats || 0;
+            document.getElementById('bal-eth').innerText = userStats.eth || 0;
+            document.getElementById('bal-sol').innerText = userStats.sol || 0;
+            document.getElementById('ads-count').innerText = userStats.ads || 0;
             
-            for (let i = 0; i < particleCount; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                
-                // Tamaño aleatorio
-                const size = Math.random() * 5 + 2;
-                particle.style.width = `${size}px`;
-                particle.style.height = `${size}px`;
-                
-                // Posición inicial aleatoria
-                particle.style.left = `${Math.random() * 100}%`;
-                particle.style.top = `${Math.random() * 100}%`;
-                
-                // Retraso de animación aleatorio
-                particle.style.animationDelay = `${Math.random() * 15}s`;
-                particle.style.animationDuration = `${15 + Math.random() * 10}s`;
-                
-                particlesContainer.appendChild(particle);
+            // Chequeo de retiro
+            if(userStats.ads >= 1000) {
+                document.getElementById('ads-count').style.color = 'green';
+                // Aquí habilitarías el botón de retiro real
             }
         }
+
+        // --- 5. RENDERIZADO DEL MAPA ---
+        function renderMap() {
+            const container = document.getElementById('map-container');
+            container.innerHTML = '<div class="map-bg-decoration"></div>'; // Limpiar y poner fondo
+
+            // Creamos 50 niveles para el ejemplo
+            // Como el CSS es flex-reverse, el nodo que agreguemos primero estará abajo visualmente?
+            // No, flex-direction: column-reverse hace que el primer elemento del HTML esté ABAJO.
+            // Así que hacemos loop de 1 a 50.
+            
+            for (let i = 1; i <= 50; i++) {
+                const node = document.createElement('div');
+                node.className = 'level-node';
+                node.innerText = i;
+
+                // Bloquear niveles superiores al actual
+                if (i > userStats.level) {
+                    node.classList.add('locked');
+                } else {
+                    node.onclick = () => openLevel(i);
+                }
+                
+                // Pequeño desplazamiento aleatorio para que parezca un camino sinuoso
+                const offset = (i % 2 === 0) ? '30px' : '-30px';
+                node.style.marginLeft = offset;
+
+                container.appendChild(node);
+
+                // Agregar línea conectora si no es el último
+                if (i < 50) {
+                    const line = document.createElement('div');
+                    line.className = 'path-line';
+                    line.style.marginLeft = offset;
+                    container.appendChild(line);
+                }
+            }
+            
+            // Scroll automático al nivel actual (un poco complejo con column-reverse, hacemos un pequeño hack)
+            // Simplemente dejamos que el usuario scrollee o lo intentamos centrar.
+        }
+
+        // --- 6. LÓGICA DEL MODAL Y ANUNCIOS ---
         
-        // Redirigir después de la carga
-        setTimeout(() => {
-            window.location.href = "index1.html";
-        }, 5000); // 5 segundos
-        
-        // Inicializar partículas cuando se carga la página
-        window.addEventListener('load', createParticles);
+        function openLevel(level) {
+            if(penaltyActive) {
+                alert("¡Arr! El barco está reparándose. Espera a que termine la penalización.");
+                return;
+            }
+            currentLevelOpen = level;
+            document.getElementById('modal-title').innerText = "Nivel " + level;
+            document.getElementById('modal-overlay').style.display = 'flex';
+            resetModal();
+        }
+
+        function closeModal() {
+            if (isAdProcessActive) return; // No cerrar si está viendo anuncio
+            document.getElementById('modal-overlay').style.display = 'none';
+        }
+
+        function resetModal() {
+            selectedCurrency = null;
+            document.getElementById('status-message').innerText = "";
+            document.getElementById('btn-watch-ad').disabled = true;
+            document.querySelectorAll('.currency-option').forEach(el => el.classList.remove('selected'));
+        }
+
+        function selectCurrency(curr, element) {
+            if(penaltyActive) return;
+            selectedCurrency = curr;
+            document.querySelectorAll('.currency-option').forEach(el => el.classList.remove('selected'));
+            element.classList.add('selected');
+            document.getElementById('btn-watch-ad').disabled = false;
+        }
+
+        // --- 7. CORE: LÓGICA DE TIEMPO Y PENALIZACIÓN ---
+
+        function startAdProcess() {
+            if (!selectedCurrency) return;
+            
+            isAdProcessActive = true;
+            adStartTime = Date.now();
+            
+            // URL de ejemplo (puedes poner tu rotador de anuncios aquí)
+            const adUrl = "https://www.google.com/search?q=crypto+prices"; 
+            
+            // Abrir nueva pestaña
+            window.open(adUrl, '_blank');
+            
+            document.getElementById('status-message').innerText = "Observando mapa... ¡No vuelvas antes de 10s!";
+            document.getElementById('status-message').className = "status-msg";
+        }
+
+        // Evento: Detectar cuando el usuario vuelve a la pestaña
+        document.addEventListener("visibilitychange", () => {
+            if (document.visibilityState === "visible" && isAdProcessActive) {
+                checkAdResult();
+            }
+        });
+
+        function checkAdResult() {
+            const now = Date.now();
+            const elapsed = now - adStartTime;
+            isAdProcessActive = false; // Reset flag
+
+            const minTime = 10000; // 10,000 ms = 10 segundos
+
+            if (elapsed >= minTime) {
+                // ÉXITO
+                document.getElementById('status-message').innerText = "¡Botín conseguido! +10 unidades.";
+                document.getElementById('status-message').className = "status-msg text-success";
+                rewardUser();
+            } else {
+                // FALLO - PENALIZACIÓN
+                document.getElementById('status-message').innerText = "¡Volviste muy pronto! Enlace perdido.";
+                document.getElementById('status-message').className = "status-msg text-danger";
+                activatePenalty();
+            }
+        }
+
+        function rewardUser() {
+            // Actualizar objeto local
+            if (!userStats[selectedCurrency]) userStats[selectedCurrency] = 0;
+            userStats[selectedCurrency] += 10; // Cantidad a ganar por anuncio
+            userStats.ads += 1;
+            
+            // Subir nivel cada 2 anuncios (según lógica del prompt simplificada)
+            // O simplemente permitir avanzar al siguiente nivel si ve 1 anuncio en este nivel
+            if (currentLevelOpen === userStats.level) {
+                userStats.level += 1; 
+            }
+
+            // Guardar en Firebase
+            db.ref('users/' + currentUser.uid).set(userStats);
+            
+            // Cerrar modal tras 1.5s
+            setTimeout(() => {
+                closeModal();
+                updateUI(); // Refrescar UI (mapa desbloqueado)
+            }, 1500);
+        }
+
+        function activatePenalty() {
+            penaltyActive = true;
+            const btn = document.getElementById('btn-watch-ad');
+            btn.disabled = true;
+            btn.innerText = "BLOQUEADO";
+            
+            let penaltyTime = 20; // 20 Segundos de castigo
+
+            const timerDisplay = document.getElementById('penalty-timer');
+            
+            const interval = setInterval(() => {
+                timerDisplay.innerText = `Espera ${penaltyTime}s para intentar de nuevo...`;
+                penaltyTime--;
+
+                if (penaltyTime < 0) {
+                    clearInterval(interval);
+                    penaltyActive = false;
+                    timerDisplay.innerText = "";
+                    btn.innerText = "Ver Anuncio";
+                    btn.disabled = false; // Habilitar de nuevo
+                    document.getElementById('status-message').innerText = "Inténtalo de nuevo.";
+                    document.getElementById('status-message').className = "status-msg";
+                }
+            }, 1000);
+        }
+
     </script>
 </body>
 </html>
